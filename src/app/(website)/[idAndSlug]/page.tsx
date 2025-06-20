@@ -1,7 +1,43 @@
+import BackButton from '@/components/back-button';
 import Footer from '@/components/footer';
+import { generatePageMetadata } from '@/lib/metadata/generators';
 import { prisma } from '@/lib/prisma';
+import { stripHtml } from '@/lib/utils';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
+export async function generateMetadata({
+    params,
+}: {
+    params: { idAndSlug: string };
+}): Promise<Metadata> {
+    const [id] = params.idAndSlug.split('-');
+    const product = await prisma.product.findUnique({
+        where: { product_id: id },
+        include: {
+            categories: {
+                include: { category: true },
+            },
+        },
+    });
+
+    if (!product) {
+        return await generatePageMetadata({
+            params: Promise.resolve({
+                title: '',
+                description: '',
+            }),
+        });
+    }
+
+    return await generatePageMetadata({
+        params: Promise.resolve({
+            title: product?.name,
+            description: stripHtml(product.description || ''),
+        }),
+    });
+}
 
 export default async function Page({ params }: { params: { idAndSlug: string } }) {
     const [id] = params.idAndSlug.split('-');
@@ -19,14 +55,6 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
     }
 
     const images: string[] = Array.isArray(product.images) ? product.images : [];
-
-    function stripHtml(html: string): string {
-        if (!html) return '';
-        return html
-            .replace(/<[^>]+>/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
 
     return (
         <>
@@ -71,6 +99,9 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
                 })}
             </script>
             <div className="container mx-auto mt-10 max-w-7xl px-4 py-8">
+                <div className="mb-6">
+                    <BackButton />
+                </div>
                 <div className="flex flex-col gap-10 md:flex-row">
                     <div className="flex w-full flex-col items-center gap-4 md:w-2/5">
                         <div className="flex aspect-[4/5] w-full max-w-xs items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-white md:max-w-none dark:border-neutral-800 dark:bg-neutral-900">
@@ -115,7 +146,7 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
                                 {product.name}
                             </h1>
                             <div className="mb-2 flex flex-wrap items-center gap-4">
-                                <span className="bg-primary rounded-xl px-6 py-3 text-2xl font-bold text-white">
+                                <span className="bg-primary rounded-xl px-6 py-3 text-2xl font-bold text-white dark:bg-stone-950">
                                     {Number(product.price).toLocaleString('tr-TR', {
                                         style: 'currency',
                                         currency: 'TRY',
@@ -189,7 +220,7 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
                                     href={product.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white shadow transition focus:ring-2 focus:outline-none"
+                                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white shadow transition focus:ring-2 focus:outline-none dark:bg-stone-950"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
