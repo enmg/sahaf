@@ -1,6 +1,5 @@
 export * from './cn';
 export * from './urls';
-export { toProductSlug };
 
 export function toProductSlug(name: string): string {
     return name

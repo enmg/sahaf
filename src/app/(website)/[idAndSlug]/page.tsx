@@ -12,7 +12,8 @@ export async function generateMetadata({
 }: {
     params: { idAndSlug: string };
 }): Promise<Metadata> {
-    const [id] = params.idAndSlug.split('-');
+    const prms = await params;
+    const [id] = prms.idAndSlug.split('-');
     const product = await prisma.product.findUnique({
         where: { product_id: id },
         include: {
@@ -40,7 +41,8 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: { idAndSlug: string } }) {
-    const [id] = params.idAndSlug.split('-');
+    const prms = await params;
+    const [id] = prms.idAndSlug.split('-');
     const product = await prisma.product.findUnique({
         where: { product_id: id },
         include: {

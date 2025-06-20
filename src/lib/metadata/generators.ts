@@ -6,7 +6,7 @@ export async function generateSiteMetadata(): Promise<Metadata> {
     const baseUrl = getBaseUrl();
 
     const imageData = {
-        images: [{ url: baseUrl + '/api/og' }],
+        images: [{ url: baseUrl + '/nostalji-dukkani.png' }],
     };
 
     return {
@@ -14,8 +14,8 @@ export async function generateSiteMetadata(): Promise<Metadata> {
         generator: 'Nitrokit',
         applicationName: env.APP_NAME,
         referrer: 'origin-when-cross-origin',
-        creator: '',
-        publisher: '',
+        creator: 'Ekipisi',
+        publisher: 'Ekipisi',
         appleWebApp: {
             statusBarStyle: 'black-translucent',
             title: env.APP_NAME,
@@ -36,12 +36,23 @@ export async function generateSiteMetadata(): Promise<Metadata> {
         icons: {
             icon: `${baseUrl}/favicon.ico`,
         },
+        twitter: {
+            card: 'summary_large_image',
+            title: env.APP_NAME,
+            description: env.APP_DESCRIPTION,
+            creator: 'Ekipisi',
+            ...imageData,
+        },
         openGraph: {
             title: env.APP_NAME,
             description: env.APP_DESCRIPTION,
             url: baseUrl,
             siteName: env.APP_NAME,
             ...imageData,
+        },
+        verification: {
+            google: env.GOOGLE_SITE_VERIFICATION,
+            yandex: env.YANDEX_VERIFICATION,
         },
         robots: {
             index: true,
