@@ -4,6 +4,7 @@ import { getBaseUrl } from '@/lib/utils/urls';
 
 export async function GET() {
     const products = await prisma.product.findMany({
+        orderBy: { date_added: 'desc' },
         select: {
             product_id: true,
             name: true,
