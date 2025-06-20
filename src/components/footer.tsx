@@ -5,9 +5,12 @@ import { Logo } from './logo';
 import { Button } from '@/components/ui/button';
 import { getBaseUrl } from '../lib/utils/urls';
 import { LINKS } from '@/constants/links';
+import { prisma } from '@/lib/prisma';
 
-export default function FooterSection(props: { categories?: any[]; search?: string }) {
-    const categories = props.categories || [];
+export default async function FooterSection(props: { search?: string }) {
+    const categories = await prisma.category.findMany({
+        orderBy: { name: 'asc' },
+    });
     const search = props.search || '';
     const categoryColCount = Math.max(1, Math.ceil(categories.length / 5));
     const gridColsClass =
@@ -21,7 +24,7 @@ export default function FooterSection(props: { categories?: any[]; search?: stri
                   ? 'grid-cols-4'
                   : 'grid-cols-5';
     return (
-        <footer className="mx-auto max-w-7xl px-4 py-8">
+        <footer className="mx-auto mt-10 max-w-7xl px-4 py-8">
             <div className="grid gap-30 md:grid-cols-3">
                 <div className="md:col-span-1">
                     <Link href={getBaseUrl()} className="mb-6 inline-flex items-center space-x-2">
@@ -77,38 +80,23 @@ export default function FooterSection(props: { categories?: any[]; search?: stri
                         Kategoriler
                     </h3>
                     <nav>
-                        <div className={`grid gap-2 ${gridColsClass}`}>
+                        <div className={`grid gap-2 ${gridColsClass} auto-cols-max`}>
                             {Array.from({ length: Math.ceil(categories.length / 5) }).map(
                                 (_, colIdx) => (
-                                    <div key={colIdx} className="space-y-2">
+                                    <div
+                                        key={colIdx}
+                                        className="max-w-[160px] min-w-[160px] space-y-2"
+                                    >
                                         {categories
                                             .slice(colIdx * 5, (colIdx + 1) * 5)
                                             .map((cat: any) => (
                                                 <a
                                                     key={cat.category_id}
-                                                    href={`?q=${encodeURIComponent(search)}&category=${encodeURIComponent(cat.category_id)}&page=1`}
-                                                    className="text-muted-foreground hover:text-foreground group flex items-center truncate overflow-hidden pr-10 text-sm whitespace-nowrap transition-colors"
+                                                    href={`/?q=${encodeURIComponent(search)}&category=${encodeURIComponent(cat.category_id)}&page=1`}
+                                                    className="text-muted-foreground hover:text-foreground flex w-full items-center truncate pr-10 text-sm transition-colors"
                                                 >
-                                                    <span className="flex items-center truncate overflow-hidden text-ellipsis whitespace-nowrap">
-                                                        <span className="mr-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-slate-400 dark:bg-slate-600"></span>
-                                                        {cat.name}
-                                                    </span>
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        className="lucide lucide-arrow-right ml-1 h-3 w-3 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
-                                                        aria-hidden="true"
-                                                    >
-                                                        <path d="M5 12h14"></path>
-                                                        <path d="m12 5 7 7-7 7"></path>
-                                                    </svg>
+                                                    <span className="mr-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-slate-400 dark:bg-slate-600"></span>
+                                                    <span className="truncate">{cat.name}</span>
                                                 </a>
                                             ))}
                                     </div>

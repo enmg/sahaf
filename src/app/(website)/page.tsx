@@ -9,14 +9,12 @@ export default async function Home({
 }: {
     searchParams?: { q?: string; page?: string; category?: string };
 }) {
-    const page = Number(searchParams?.page) || 1;
-    const pageSize = 12;
-    const search = searchParams?.q || '';
-    const category = searchParams?.category || '';
+    const searchPrms = await searchParams;
 
-    const categories = await prisma.category.findMany({
-        orderBy: { name: 'asc' },
-    });
+    const page = Number(searchPrms?.page) || 1;
+    const pageSize = 12;
+    const search = searchPrms?.q || '';
+    const category = searchPrms?.category || '';
 
     const where: any = {};
     if (search) {
@@ -82,7 +80,7 @@ export default async function Home({
                     category={category}
                 />
             </div>
-            <Footer categories={categories} search={search} />
+            <Footer search={search} />
         </>
     );
 }

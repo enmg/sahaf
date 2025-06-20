@@ -1,5 +1,6 @@
 import { ProductCardProps } from '@/types/product';
 import Image from 'next/image';
+import { toProductSlug } from '@/lib/utils/';
 
 export function ProductCard({ product, search }: ProductCardProps) {
     function stripHtml(html: string): string {
@@ -65,11 +66,29 @@ export function ProductCard({ product, search }: ProductCardProps) {
                     </span>
                 </div>
                 <a
-                    href={product.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center rounded-lg bg-slate-600 px-4 py-2 text-base font-medium text-white shadow-none transition hover:bg-slate-700 dark:bg-cyan-900/40 dark:text-cyan-200 dark:hover:bg-cyan-800"
+                    href={`/${product.product_id}-${toProductSlug(product.name)}`}
+                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 flex items-center gap-2 rounded-lg px-4 py-2 text-base font-medium text-white shadow transition focus:ring-2 focus:outline-none dark:bg-cyan-900/40 dark:text-cyan-200 dark:hover:bg-cyan-800"
+                    aria-label="Ürün detayını gör"
                 >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="h-5 w-5"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15"
+                        />
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M18.75 12l-6 6m0 0l-6-6m6 6V3"
+                        />
+                    </svg>
                     Ürünü Gör
                 </a>
             </div>
