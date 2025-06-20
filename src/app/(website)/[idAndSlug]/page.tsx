@@ -1,6 +1,7 @@
 import BackButton from '@/components/back-button';
 import Footer from '@/components/footer';
 import { prisma } from '@/lib/prisma';
+import { stripHtml } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -22,14 +23,6 @@ export default async function Page({ params }: { params: Promise<{ idAndSlug: st
     }
 
     const images: string[] = Array.isArray(product.images) ? product.images : [];
-
-    function stripHtml(html: string): string {
-        if (!html) return '';
-        return html
-            .replace(/<[^>]+>/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
 
     return (
         <>
@@ -121,7 +114,7 @@ export default async function Page({ params }: { params: Promise<{ idAndSlug: st
                                 {product.name}
                             </h1>
                             <div className="mb-2 flex flex-wrap items-center gap-4">
-                                <span className="bg-primary rounded-xl px-6 py-3 text-2xl font-bold text-white">
+                                <span className="bg-primary rounded-xl px-6 py-3 text-2xl font-bold text-white dark:bg-stone-950">
                                     {Number(product.price).toLocaleString('tr-TR', {
                                         style: 'currency',
                                         currency: 'TRY',
@@ -195,7 +188,7 @@ export default async function Page({ params }: { params: Promise<{ idAndSlug: st
                                     href={product.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white shadow transition focus:ring-2 focus:outline-none"
+                                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white shadow transition focus:ring-2 focus:outline-none dark:bg-stone-950"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
