@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { getBaseUrl } from '../lib/utils/urls';
 import { LINKS } from '@/constants/links';
 import { prisma } from '@/lib/prisma';
+import PoweredBy from './powered-by';
 
 export default async function FooterSection(props: { search?: string }) {
     const categories = await prisma.category.findMany({
@@ -110,7 +111,10 @@ export default async function FooterSection(props: { search?: string }) {
                 <span className="text-muted-foreground order-last block text-center text-sm md:order-first">
                     © {new Date().getFullYear()} Nostalji Dükkanı
                 </span>
-                <ThemeSwitcher />
+                <div className="flex gap-4">
+                    <PoweredBy />
+                    <ThemeSwitcher />
+                </div>
             </div>
         </footer>
     );
