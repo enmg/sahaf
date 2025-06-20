@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '@/styles/globals.css';
+import NextThemeProvider from '@/components/providers/theme-provider';
+import { Toaster } from 'sonner';
+import Header from '@/components/headers';
+import Footer from '@/components/footer';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -23,11 +27,20 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
+		<html
+			lang='en'
+			suppressHydrationWarning={true}
+			className='scroll-smooth'
+		>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
 			>
-				{children}
+				<NextThemeProvider>
+					<Header />
+					<main>{children}</main>
+					<Footer />
+					<Toaster />
+				</NextThemeProvider>
 			</body>
 		</html>
 	);

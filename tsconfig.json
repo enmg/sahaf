@@ -19,7 +19,9 @@
 			}
 		],
 		"paths": {
+			"@/hooks": ["./src/hooks/*"],
 			"@/styles": ["./src/styles/*"],
+			"@/types": ["./src/types/*"],
 			"@/*": ["./src/*"]
 		}
 	},
