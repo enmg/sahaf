@@ -7,7 +7,7 @@ import Footer from '@/components/footer';
 export default async function Home({
     searchParams,
 }: {
-    searchParams?: { q?: string; page?: string; category?: string };
+    searchParams: Promise<{ q?: string; page?: string; category?: string }>;
 }) {
     const searchPrms = await searchParams;
 

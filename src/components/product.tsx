@@ -1,6 +1,6 @@
 import { ProductCardProps } from '@/types/product';
 import Image from 'next/image';
-import { toProductSlug } from '@/lib/utils/';
+import { toProductSlug } from '@/lib/utils/index';
 
 export function ProductCard({ product, search }: ProductCardProps) {
     function stripHtml(html: string): string {

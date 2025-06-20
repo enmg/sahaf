@@ -1,48 +1,12 @@
-import BackButton from '@/components/back-button';
 import Footer from '@/components/footer';
-import { generatePageMetadata } from '@/lib/metadata/generators';
 import { prisma } from '@/lib/prisma';
-import { stripHtml } from '@/lib/utils';
-import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export async function generateMetadata({
-    params,
-}: {
-    params: { idAndSlug: string };
-}): Promise<Metadata> {
-    const prms = await params;
-    const [id] = prms.idAndSlug.split('-');
-    const product = await prisma.product.findUnique({
-        where: { product_id: id },
-        include: {
-            categories: {
-                include: { category: true },
-            },
-        },
-    });
+export default async function Page({ params }: { params: Promise<{ idAndSlug: string }> }) {
+    const { idAndSlug } = await params;
 
-    if (!product) {
-        return await generatePageMetadata({
-            params: Promise.resolve({
-                title: '',
-                description: '',
-            }),
-        });
-    }
-
-    return await generatePageMetadata({
-        params: Promise.resolve({
-            title: product?.name,
-            description: stripHtml(product.description || ''),
-        }),
-    });
-}
-
-export default async function Page({ params }: { params: { idAndSlug: string } }) {
-    const prms = await params;
-    const [id] = prms.idAndSlug.split('-');
+    const [id] = idAndSlug.split('-');
     const product = await prisma.product.findUnique({
         where: { product_id: id },
         include: {
@@ -57,6 +21,14 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
     }
 
     const images: string[] = Array.isArray(product.images) ? product.images : [];
+
+    function stripHtml(html: string): string {
+        if (!html) return '';
+        return html
+            .replace(/<[^>]+>/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
 
     return (
         <>
@@ -102,7 +74,27 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
             </script>
             <div className="container mx-auto mt-10 max-w-7xl px-4 py-8">
                 <div className="mb-6">
-                    <BackButton />
+                    <button
+                        type="button"
+                        onClick={() => window.history.back()}
+                        className="inline-flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 shadow transition hover:bg-gray-200 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className="h-4 w-4"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15.75 19.5L8.25 12l7.5-7.5"
+                            />
+                        </svg>
+                        Geri Dön
+                    </button>
                 </div>
                 <div className="flex flex-col gap-10 md:flex-row">
                     <div className="flex w-full flex-col items-center gap-4 md:w-2/5">
@@ -148,7 +140,7 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
                                 {product.name}
                             </h1>
                             <div className="mb-2 flex flex-wrap items-center gap-4">
-                                <span className="bg-primary rounded-xl px-6 py-3 text-2xl font-bold text-white dark:bg-stone-950">
+                                <span className="bg-primary rounded-xl px-6 py-3 text-2xl font-bold text-white">
                                     {Number(product.price).toLocaleString('tr-TR', {
                                         style: 'currency',
                                         currency: 'TRY',
@@ -222,7 +214,7 @@ export default async function Page({ params }: { params: { idAndSlug: string } }
                                     href={product.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white shadow transition focus:ring-2 focus:outline-none dark:bg-stone-950"
+                                    className="bg-primary hover:bg-primary/90 focus:ring-primary/50 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white shadow transition focus:ring-2 focus:outline-none"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
