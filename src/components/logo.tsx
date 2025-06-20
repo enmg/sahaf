@@ -7,7 +7,7 @@ export const Logo = ({ className }: { className?: string }) => {
             <div>
                 <LogoIcon className={className} />
             </div>
-            <div className="bg-linear-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text font-[family-name:var(--font-lexend)] text-2xl font-bold text-transparent text-shadow-2xs">
+            <div className="bg-linear-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text font-[family-name:var(--font-lexend)] text-3xl font-bold text-transparent text-shadow-2xs">
                 {env.APP_NAME}
             </div>
         </div>

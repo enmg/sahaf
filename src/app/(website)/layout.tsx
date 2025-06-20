@@ -4,7 +4,6 @@ import '@/styles/globals.css';
 import NextThemeProvider from '@/components/providers/theme-provider';
 import { Toaster } from 'sonner';
 import Header from '@/components/headers';
-import Footer from '@/components/footer';
 import { generateSiteMetadata } from '@/lib';
 
 const geistSans = Geist({
@@ -47,7 +46,6 @@ export default function RootLayout({
                 <NextThemeProvider>
                     <Header />
                     <main>{children}</main>
-                    <Footer />
                     <Toaster />
                 </NextThemeProvider>
             </body>
